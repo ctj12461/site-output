@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>数论 - 标签 - ctj12461's Blog</title><link>https://ctj12461.github.io/blogs/tags/%E6%95%B0%E8%AE%BA/</link><description>数论 - 标签 - ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Sun, 20 Feb 2022 11:23:07 +0800</lastBuildDate><atom:link href="https://ctj12461.github.io/blogs/tags/%E6%95%B0%E8%AE%BA/" rel="self" type="application/rss+xml"/><item><title>莫比乌斯反演学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/mobius-inversion-note/</link><pubDate>Sun, 20 Feb 2022 11:23:07 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/mobius-inversion-note/</guid><description><![CDATA[<p>莫比乌斯反演可以用于优化一类式子的计算。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>数论 - 标签 - ctj12461's Blog</title><link>https://ctj12461.netlify.app/tags/%E6%95%B0%E8%AE%BA/</link><description>数论 - 标签 - ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Sun, 20 Feb 2022 11:23:07 +0800</lastBuildDate><atom:link href="https://ctj12461.netlify.app/tags/%E6%95%B0%E8%AE%BA/" rel="self" type="application/rss+xml"/><item><title>莫比乌斯反演学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/mobius-inversion-note/</link><pubDate>Sun, 20 Feb 2022 11:23:07 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/mobius-inversion-note/</guid><description><![CDATA[<p>莫比乌斯反演可以用于优化一类式子的计算。</p>
 <h2 id="莫比乌斯函数">莫比乌斯函数</h2>
 <h3 id="定义">定义</h3>
 <p>莫比乌斯函数的定义如下：</p>
@@ -1138,7 +1138,7 @@ $$</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>同余方程学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/congruence-equation-note/</link><pubDate>Sun, 13 Feb 2022 21:40:02 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/congruence-equation-note/</guid><description><![CDATA[<p>解各种同余方程是同余问题的一个重要部分，本文介绍各种同余方程的求解方法。</p>
+</div>]]></description></item><item><title>同余方程学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/congruence-equation-note/</link><pubDate>Sun, 13 Feb 2022 21:40:02 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/congruence-equation-note/</guid><description><![CDATA[<p>解各种同余方程是同余问题的一个重要部分，本文介绍各种同余方程的求解方法。</p>
 <h2 id="二元线性不定方程">二元线性不定方程</h2>
 <h3 id="形式">形式</h3>
 <p>不定方程的范围很广泛，只要没有确定的解的方程都可以叫不定方程。本文主要讨论数论中的不定方程。</p>
@@ -2214,7 +2214,7 @@ $$</p>
 ny \equiv z \pmod{m}
 $$</p>
 <p>代码就不写了，上面组合一下就可以了。</p>
-]]></description></item><item><title>欧拉函数 &amp; 欧拉定理学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/euler-function-and-euler-theorem-note/</link><pubDate>Thu, 10 Feb 2022 08:37:50 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/euler-function-and-euler-theorem-note/</guid><description><![CDATA[<p>欧拉函数 $\varphi(n)$ 是一个重要的数论函数，它表示 $[1, n]$ 中与 $n$ 互质的数的个数。</p>
+]]></description></item><item><title>欧拉函数 &amp; 欧拉定理学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/euler-function-and-euler-theorem-note/</link><pubDate>Thu, 10 Feb 2022 08:37:50 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/euler-function-and-euler-theorem-note/</guid><description><![CDATA[<p>欧拉函数 $\varphi(n)$ 是一个重要的数论函数，它表示 $[1, n]$ 中与 $n$ 互质的数的个数。</p>
 <h2 id="欧拉函数性质">欧拉函数性质</h2>
 <h3 id="积性函数">积性函数</h3>
 <p>积性函数的定义是：如果一个函数 $f(n)$ 满足 $\gcd(a,b)=1$ 时 $f(ab)=f(a)f(b)$，则 $f(n)$ 为积性函数。

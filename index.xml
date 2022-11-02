@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>ctj12461's Blog</title><link>https://ctj12461.github.io/blogs/</link><description>ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Sat, 06 Aug 2022 21:06:58 +0800</lastBuildDate><atom:link href="https://ctj12461.github.io/blogs/index.xml" rel="self" type="application/rss+xml"/><item><title>Minecraft 运动学研究</title><link>https://ctj12461.github.io/blogs/contents/2022/motion-study-in-minecraft/</link><pubDate>Sat, 06 Aug 2022 21:06:58 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/motion-study-in-minecraft/</guid><description><![CDATA[<p>在造红石炮时，往往需要用到一些运动学的知识。以下是我对 Minecraft 的运动学的一些研究，应该会对设计红石炮有所帮助，</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>ctj12461's Blog</title><link>https://ctj12461.netlify.app/</link><description>ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Sat, 06 Aug 2022 21:06:58 +0800</lastBuildDate><atom:link href="https://ctj12461.netlify.app/index.xml" rel="self" type="application/rss+xml"/><item><title>Minecraft 运动学研究</title><link>https://ctj12461.netlify.app/contents/2022/motion-study-in-minecraft/</link><pubDate>Sat, 06 Aug 2022 21:06:58 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/motion-study-in-minecraft/</guid><description><![CDATA[<p>在造红石炮时，往往需要用到一些运动学的知识。以下是我对 Minecraft 的运动学的一些研究，应该会对设计红石炮有所帮助，</p>
 <h2 id="前置知识">前置知识</h2>
 <ul>
 <li>在 Minecraft 中，我们通常只考虑实体的运动，而方块则与运动没有一点关系。实体的运动大体与高中物理相同，但需要考虑空气阻力的作用，这使得 Minecraft 中的运动更加真实但又更加复杂。</li>
@@ -77,11 +77,11 @@ $$</p>
 </div>
 </div><h3 id="实验验证">实验验证</h3>
 <p>在 Minecraft 中进行验证，可以通过中继器延时控制活塞的伸缩，用活塞挡住 TNT，从而控制 TNT 的实际下落时间。TNT 在 $4\ \text{s}$ 后会爆炸，可以用方块搭建一面墙作为标尺，利用 TNT 爆炸破坏墙面来确定其位置。</p>
-<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-sub-html="<h2>实验装置设计</h2>">
+<figure><a class="lightgallery" href="/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-thumbnail="/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-sub-html="<h2>实验装置设计</h2>">
     
   </a><figcaption class="image-caption">实验装置设计</figcaption>
   </figure>
-<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-sub-html="<h2>实验装置设计</h2>">
+<figure><a class="lightgallery" href="/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-thumbnail="/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-sub-html="<h2>实验装置设计</h2>">
     
   </a><figcaption class="image-caption">实验装置设计</figcaption>
   </figure>
@@ -92,7 +92,7 @@ $$</p>
 <li>计算好延迟，<strong>特别是活塞</strong></li>
 </ul>
 <p>进行三次实验，对每个时刻的下落高度取平均值。</p>
-<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-sub-html="<h2>实验结果</h2>">
+<figure><a class="lightgallery" href="/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-thumbnail="/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-sub-html="<h2>实验结果</h2>">
     
   </a><figcaption class="image-caption">实验结果</figcaption>
   </figure>
@@ -194,9 +194,9 @@ $$</p>
 <h2 id="水平方向上的运动">水平方向上的运动</h2>
 <p>其实水平方向上的运动与竖直方向上的大体类似，但是有点实体在水平方向（$x,z$ 轴）的阻力系数与竖直方向的不同，所以需要注意。</p>
 <p>但是考虑到实际应用，一般情况下都是涉及到红石炮这种装置，其在水平方向上能够提供往往非常巨大，阻力远小于动力，且红石炮的弹头在飞行过程中在水平方向上不受重力，可以近似为匀速直线运动，不需要用到这么复杂的理论。</p>
-]]></description></item><item><title>第一桶金</title><link>https://ctj12461.github.io/blogs/contents/2022/the-first-pod-of-gold/</link><pubDate>Sun, 19 Jun 2022 20:03:56 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/the-first-pod-of-gold/</guid><description><![CDATA[<p>前几天接到通知，福州市教育局要为 2021 年的奥赛获奖者颁发一笔奖金，我去年获得了 NOIP 一等奖，所以就获得了 2000 元的奖励。听说这个消息后，我虽表面上毫无波澜，没有什么特别的表现，内心还是很激动的，这一笔奖金，应该可以算是我人生中完全通过自己的努力挣得的第一桶金吧。虽然 2000 元的数目可能不是非常多，其远比不上 4 年光阴的艰苦奋斗，但是它是一种奖励，更是一个证明，对于我来说还是 very remarkable &amp; meaningful 的。有了付出才会有回报，才能够体会到这种喜悦，这或许就是劳动的意义。</p>
+]]></description></item><item><title>第一桶金</title><link>https://ctj12461.netlify.app/contents/2022/the-first-pod-of-gold/</link><pubDate>Sun, 19 Jun 2022 20:03:56 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/the-first-pod-of-gold/</guid><description><![CDATA[<p>前几天接到通知，福州市教育局要为 2021 年的奥赛获奖者颁发一笔奖金，我去年获得了 NOIP 一等奖，所以就获得了 2000 元的奖励。听说这个消息后，我虽表面上毫无波澜，没有什么特别的表现，内心还是很激动的，这一笔奖金，应该可以算是我人生中完全通过自己的努力挣得的第一桶金吧。虽然 2000 元的数目可能不是非常多，其远比不上 4 年光阴的艰苦奋斗，但是它是一种奖励，更是一个证明，对于我来说还是 very remarkable &amp; meaningful 的。有了付出才会有回报，才能够体会到这种喜悦，这或许就是劳动的意义。</p>
 <p>在这里也要感谢父母的支持、教练的教导已经同学的陪伴，是你们让这段时光充满乐趣，难以忘却。</p>
-]]></description></item><item><title>Hugo 添加 Netlify CMS 支持</title><link>https://ctj12461.github.io/blogs/contents/2022/hugo-netlify-cms-support/</link><pubDate>Wed, 04 May 2022 21:15:39 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/hugo-netlify-cms-support/</guid><description><![CDATA[<p>为了解决偶尔在手机上写博客这一<del>不存在</del>的需求，考虑为这个博客添加一个 CMS。在很早以前，我就用过 Netlify CMS，比较熟悉，所以就继续用它了。</p>
+]]></description></item><item><title>Hugo 添加 Netlify CMS 支持</title><link>https://ctj12461.netlify.app/contents/2022/hugo-netlify-cms-support/</link><pubDate>Wed, 04 May 2022 21:15:39 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/hugo-netlify-cms-support/</guid><description><![CDATA[<p>为了解决偶尔在手机上写博客这一<del>不存在</del>的需求，考虑为这个博客添加一个 CMS。在很早以前，我就用过 Netlify CMS，比较熟悉，所以就继续用它了。</p>
 <p>这里假设源码储存在 GitHub 上，且博客部署在 Vercel 上，其他原理类似。</p>
 <h2 id="原理">原理</h2>
 <p>像 Netlify CMS 这样的 Headless CMS，一般是独立于静态博客的其他组件的。以我这个博客为例，使用 Git 来管理由 makrdown 组成的博客原始内容，储存在 GitHub 上，并通过 GitHub Action 来构建，最后部署到 Vercel 上。而 Netlify CMS 要与它们一起工作，需要做比较多的工作。</p>
@@ -345,7 +345,7 @@ $$</p>
 <h3 id="修改配置文件">修改配置文件</h3>
 <p>在 <code>config.yml</code> 的 <code>backend</code> 中添加 <code>base_url: https://netlify-cms-oauth.vercel.app</code>，设置认证服务器。</p>
 <p>接下来再部署，应该就可以使用了。</p>
-]]></description></item><item><title>Python 网络爬虫获取 SYZOJ AC 代码</title><link>https://ctj12461.github.io/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/</link><pubDate>Mon, 18 Apr 2022 15:23:12 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/</guid><description><![CDATA[<p>写本文之前，我共有两百多道题目在校内 <code>OJ</code> 上通过，由于某些原因，想要保存这些代码，于是想到使用 <code>Python</code> 实现自动爬取代码。同时考虑到效率问题，决定使用 <code>aiohttp</code> 编写一个高性能异步爬虫。</p>
+]]></description></item><item><title>Python 网络爬虫获取 SYZOJ AC 代码</title><link>https://ctj12461.netlify.app/contents/2022/python-web-crawler-syzoj-accpeted-codes/</link><pubDate>Mon, 18 Apr 2022 15:23:12 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/python-web-crawler-syzoj-accpeted-codes/</guid><description><![CDATA[<p>写本文之前，我共有两百多道题目在校内 <code>OJ</code> 上通过，由于某些原因，想要保存这些代码，于是想到使用 <code>Python</code> 实现自动爬取代码。同时考虑到效率问题，决定使用 <code>aiohttp</code> 编写一个高性能异步爬虫。</p>
 <h2 id="实现目标分析">实现目标分析</h2>
 <p>这个爬虫需要能够爬取所有的已通过题目的列表，并继续爬取这些已通过题目的代码，随后保存到文件中。</p>
 <p>校内 <code>OJ</code> 基于 <code>SYZOJ</code> 搭建，该 <code>OJ</code> 的项目地址为 <a href="https://github.com/syzoj/syzoj"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/syzoj/syzoj</a>，故接下来的代码都是基于其实现的。</p>
@@ -509,7 +509,7 @@ $$</p>
 </div>
 </div><h2 id="获取通过题目列表">获取通过题目列表</h2>
 <p>这里通过抓取题目页面来获取题目列表，如果一道题目已经通过，题目前面就会有一个绿色的勾，指向 <code>AC</code> 记录。</p>
-<figure><a class="lightgallery" href="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-thumbnail="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-sub-html="<h2>题目列表</h2>">
+<figure><a class="lightgallery" href="/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-thumbnail="/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-sub-html="<h2>题目列表</h2>">
     
   </a><figcaption class="image-caption">题目列表</figcaption>
   </figure>
@@ -872,14 +872,14 @@ $$</p>
 </div><p>完整代码见 <a href="https://github.com/ctj12461/syzoj-crawler"target="_blank" rel="external nofollow noopener noreferrer">GitHub</a>。</p>
 <h2 id="测试">测试</h2>
 <p>使用同学的帐号进行测试，爬取 <code>465</code> 道题目仅需 <code>27</code> 秒：</p>
-<figure><a class="lightgallery" href="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-thumbnail="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-sub-html="<h2>爬虫输出结果</h2>">
+<figure><a class="lightgallery" href="/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-thumbnail="/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-sub-html="<h2>爬虫输出结果</h2>">
     
   </a><figcaption class="image-caption">爬虫输出结果</figcaption>
   </figure>
 <p>如果使用同步爬虫，则需要 <code>1</code> 分 <code>18</code> 秒，效率提升还是很明显的。</p>
 <h2 id="性能提升">性能提升</h2>
 <p>如果网络延迟较低，字符串相关的处理可能会成为性能瓶颈，可以考虑使用多线程/多进程进行优化。具体也没有我也尝试过，因为大多数情况下网络延迟还是比较严重的，所以在其他方面做优化不一定有用。大家可以自己实现。</p>
-]]></description></item><item><title>AtCoder ARC 073E Ball Coloring 题解</title><link>https://ctj12461.github.io/blogs/contents/2022/atcoder-arc073e-solution/</link><pubDate>Fri, 15 Apr 2022 23:39:44 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/atcoder-arc073e-solution/</guid><description><![CDATA[<p>题目链接：<a href="https://atcoder.jp/contests/arc073/tasks/arc073_c"target="_blank" rel="external nofollow noopener noreferrer">https://atcoder.jp/contests/arc073/tasks/arc073_c</a>，题目大意如下：</p>
+]]></description></item><item><title>AtCoder ARC 073E Ball Coloring 题解</title><link>https://ctj12461.netlify.app/contents/2022/atcoder-arc073e-solution/</link><pubDate>Fri, 15 Apr 2022 23:39:44 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/atcoder-arc073e-solution/</guid><description><![CDATA[<p>题目链接：<a href="https://atcoder.jp/contests/arc073/tasks/arc073_c"target="_blank" rel="external nofollow noopener noreferrer">https://atcoder.jp/contests/arc073/tasks/arc073_c</a>，题目大意如下：</p>
 <blockquote>
 <p>给出 $n$ 个数对 $(a_i, b_i)$，可以给数对中的数染色，一种是 $a_i$ 红 $b_i$ 蓝，另一种则反过来。
 定义以下 4 个变量：</p>
@@ -1209,7 +1209,7 @@ $$</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>MultiGenerator 使用文档</title><link>https://ctj12461.github.io/blogs/contents/2022/multigenerator-document/</link><pubDate>Mon, 04 Apr 2022 22:15:15 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/multigenerator-document/</guid><description><![CDATA[<h2 id="概述">概述</h2>
+</div>]]></description></item><item><title>MultiGenerator 使用文档</title><link>https://ctj12461.netlify.app/contents/2022/multigenerator-document/</link><pubDate>Mon, 04 Apr 2022 22:15:15 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/multigenerator-document/</guid><description><![CDATA[<h2 id="概述">概述</h2>
 <p><code>MultiGenerator</code> 是一个为 <code>OI</code> 而生的多线程并行数据生成库，基于 <code>C++ 17</code>，使用面向对象和泛型等 <code>Morden C++</code> 高级特性，只需要添加最少的额外代码，就可以获得最高的性能。以下是一个能够指定数据范围的 <code>A + B Problem</code> 数据生成器的示例代码：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1749,7 +1749,7 @@ $$</p>
 <h2 id="faq">FAQ</h2>
 <p>Q1：我在 <code>Linux</code> 平台下，如果编译不能够通过，并且含有错误信息中含有 <code>pthread</code> 相关的东西，怎么解决？</p>
 <p>A1：<code>Linux</code> 下使用多线程需要调用 <code>pthread</code>，需要给 <code>g++</code> 加上 <code>-pthread</code> 参数。</p>
-]]></description></item><item><title>std::function 和 std::bind 的使用陷阱</title><link>https://ctj12461.github.io/blogs/contents/2022/traps-of-std-function-and-std-bind/</link><pubDate>Tue, 29 Mar 2022 18:21:31 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/traps-of-std-function-and-std-bind/</guid><description><![CDATA[<p><code>std::function</code> 和 <code>std::bind</code> 是 <code>C++</code> 中非常常用的两个工具，然而要正确使用这两个工具还要更深入的理解。</p>
+]]></description></item><item><title>std::function 和 std::bind 的使用陷阱</title><link>https://ctj12461.netlify.app/contents/2022/traps-of-std-function-and-std-bind/</link><pubDate>Tue, 29 Mar 2022 18:21:31 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/traps-of-std-function-and-std-bind/</guid><description><![CDATA[<p><code>std::function</code> 和 <code>std::bind</code> 是 <code>C++</code> 中非常常用的两个工具，然而要正确使用这两个工具还要更深入的理解。</p>
 <p>最近写项目时遇到需要将不可复制构造的对象传给 <code>std::bind</code> 的情况，结果遇到了编译错误。代码逻辑可以抽象为下面这样：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2042,7 +2042,7 @@ $$</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>Arch Linux 常用软件配置</title><link>https://ctj12461.github.io/blogs/contents/2022/arch-linux-software-config/</link><pubDate>Thu, 17 Mar 2022 22:28:02 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/arch-linux-software-config/</guid><description><![CDATA[<p>记录一下安装 <code>Arch Linux</code> 后的常用软件安装以及配置。</p>
+</div>]]></description></item><item><title>Arch Linux 常用软件配置</title><link>https://ctj12461.netlify.app/contents/2022/arch-linux-software-config/</link><pubDate>Thu, 17 Mar 2022 22:28:02 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/arch-linux-software-config/</guid><description><![CDATA[<p>记录一下安装 <code>Arch Linux</code> 后的常用软件安装以及配置。</p>
 <h2 id="yay"><code>yay</code></h2>
 <p>使用 <code>yay</code> 从 <code>AUR</code> 上下载各种官方仓库所没有的包。</p>
 <p>项目主页：<a href="https://github.com/Jguer/yay"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/Jguer/yay</a>。</p>
@@ -2292,7 +2292,7 @@ $$</p>
 <h2 id="顶部状态栏">顶部状态栏</h2>
 <p>在桌面上右键点击添加面板，选择应用程序菜单栏，然后右键菜单栏添加部件，从左往右依次是：Application Title、全局菜单、面板间隙、系统托盘，数字时钟、锁屏/注销、显示桌面，其中 Application Title 需要进一步配置，选择其配置中的 Apperance 选项卡中的 Text Type，改为 Application name。</p>
 <p>配合 <code>Latte</code>，总体效果如下，应该是综合了美观和高效的美化配置了。</p>
-<figure><a class="lightgallery" href="/blogs/contents/2022/arch-linux-software-config/desktop.png" data-thumbnail="/blogs/contents/2022/arch-linux-software-config/desktop.png" data-sub-html="<h2>桌面</h2>">
+<figure><a class="lightgallery" href="/contents/2022/arch-linux-software-config/desktop.png" data-thumbnail="/contents/2022/arch-linux-software-config/desktop.png" data-sub-html="<h2>桌面</h2>">
     
   </a><figcaption class="image-caption">桌面</figcaption>
   </figure>
@@ -2341,7 +2341,7 @@ $$</p>
 </div>
 </div><p>一般安装一个全局主题后，Kvantum 中就可以修改其配置了。打开 Kvantum 后，选择变更/删除主题选项卡，然后在选择一个主题的下拉框中选择全局主题，比如 WhiteSur，然后点击配置主题选项卡，在技巧中勾选非活动窗口禁用模糊处理，在合成 &amp; 一般外观中的不透明的应用的文本框中添加 clementine，具体尝试一下就知道如果不加，Clementine 会非常丑。</p>
 <p>最后更改应用程序风格为 kvantum。现在只要是使用原生 UI 风格的应用，菜单等都会变为模糊透明。</p>
-]]></description></item><item><title>二分图匹配学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/bipartite-graph-matching-note/</link><pubDate>Tue, 22 Feb 2022 13:31:06 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/bipartite-graph-matching-note/</guid><description><![CDATA[<h2 id="二分图">二分图</h2>
+]]></description></item><item><title>二分图匹配学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/bipartite-graph-matching-note/</link><pubDate>Tue, 22 Feb 2022 13:31:06 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/bipartite-graph-matching-note/</guid><description><![CDATA[<h2 id="二分图">二分图</h2>
 <h3 id="定义">定义</h3>
 <p>如果一个图 $G=(V,E)$ 中的结点可以被分为两个部分，且两个部分之内的点互相没有连边，则称这种图为二分图。如果每个结点的度数相等且都为 $k$，则称这种二分图为 $k$ - 正则二分图。</p>
 <h3 id="判断">判断</h3>
@@ -3658,7 +3658,7 @@ $$</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>莫比乌斯反演学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/mobius-inversion-note/</link><pubDate>Sun, 20 Feb 2022 11:23:07 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/mobius-inversion-note/</guid><description><![CDATA[<p>莫比乌斯反演可以用于优化一类式子的计算。</p>
+</div>]]></description></item><item><title>莫比乌斯反演学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/mobius-inversion-note/</link><pubDate>Sun, 20 Feb 2022 11:23:07 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/mobius-inversion-note/</guid><description><![CDATA[<p>莫比乌斯反演可以用于优化一类式子的计算。</p>
 <h2 id="莫比乌斯函数">莫比乌斯函数</h2>
 <h3 id="定义">定义</h3>
 <p>莫比乌斯函数的定义如下：</p>

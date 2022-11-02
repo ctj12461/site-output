@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>网络爬虫 - 标签 - ctj12461's Blog</title><link>https://ctj12461.github.io/blogs/tags/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/</link><description>网络爬虫 - 标签 - ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Mon, 18 Apr 2022 15:23:12 +0800</lastBuildDate><atom:link href="https://ctj12461.github.io/blogs/tags/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" rel="self" type="application/rss+xml"/><item><title>Python 网络爬虫获取 SYZOJ AC 代码</title><link>https://ctj12461.github.io/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/</link><pubDate>Mon, 18 Apr 2022 15:23:12 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/</guid><description><![CDATA[<p>写本文之前，我共有两百多道题目在校内 <code>OJ</code> 上通过，由于某些原因，想要保存这些代码，于是想到使用 <code>Python</code> 实现自动爬取代码。同时考虑到效率问题，决定使用 <code>aiohttp</code> 编写一个高性能异步爬虫。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>网络爬虫 - 标签 - ctj12461's Blog</title><link>https://ctj12461.netlify.app/tags/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/</link><description>网络爬虫 - 标签 - ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Mon, 18 Apr 2022 15:23:12 +0800</lastBuildDate><atom:link href="https://ctj12461.netlify.app/tags/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" rel="self" type="application/rss+xml"/><item><title>Python 网络爬虫获取 SYZOJ AC 代码</title><link>https://ctj12461.netlify.app/contents/2022/python-web-crawler-syzoj-accpeted-codes/</link><pubDate>Mon, 18 Apr 2022 15:23:12 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/python-web-crawler-syzoj-accpeted-codes/</guid><description><![CDATA[<p>写本文之前，我共有两百多道题目在校内 <code>OJ</code> 上通过，由于某些原因，想要保存这些代码，于是想到使用 <code>Python</code> 实现自动爬取代码。同时考虑到效率问题，决定使用 <code>aiohttp</code> 编写一个高性能异步爬虫。</p>
 <h2 id="实现目标分析">实现目标分析</h2>
 <p>这个爬虫需要能够爬取所有的已通过题目的列表，并继续爬取这些已通过题目的代码，随后保存到文件中。</p>
 <p>校内 <code>OJ</code> 基于 <code>SYZOJ</code> 搭建，该 <code>OJ</code> 的项目地址为 <a href="https://github.com/syzoj/syzoj"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/syzoj/syzoj</a>，故接下来的代码都是基于其实现的。</p>
@@ -162,7 +162,7 @@
 </div>
 </div><h2 id="获取通过题目列表">获取通过题目列表</h2>
 <p>这里通过抓取题目页面来获取题目列表，如果一道题目已经通过，题目前面就会有一个绿色的勾，指向 <code>AC</code> 记录。</p>
-<figure><a class="lightgallery" href="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-thumbnail="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-sub-html="<h2>题目列表</h2>">
+<figure><a class="lightgallery" href="/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-thumbnail="/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-sub-html="<h2>题目列表</h2>">
     
   </a><figcaption class="image-caption">题目列表</figcaption>
   </figure>
@@ -525,7 +525,7 @@
 </div><p>完整代码见 <a href="https://github.com/ctj12461/syzoj-crawler"target="_blank" rel="external nofollow noopener noreferrer">GitHub</a>。</p>
 <h2 id="测试">测试</h2>
 <p>使用同学的帐号进行测试，爬取 <code>465</code> 道题目仅需 <code>27</code> 秒：</p>
-<figure><a class="lightgallery" href="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-thumbnail="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-sub-html="<h2>爬虫输出结果</h2>">
+<figure><a class="lightgallery" href="/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-thumbnail="/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-sub-html="<h2>爬虫输出结果</h2>">
     
   </a><figcaption class="image-caption">爬虫输出结果</figcaption>
   </figure>

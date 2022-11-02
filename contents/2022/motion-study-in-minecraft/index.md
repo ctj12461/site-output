@@ -101,5 +101,5 @@ Minecraft 中的速度是可以合成和分解的，所以竖直方向上的运�
 ---
 
 > 作者:   
-> URL: https://ctj12461.github.io/blogs/contents/2022/motion-study-in-minecraft/  
+> URL: https://ctj12461.netlify.app/contents/2022/motion-study-in-minecraft/  
 

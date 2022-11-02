@@ -366,5 +366,5 @@ A1：`Linux` 下使用多线程需要调用 `pthread`，需要给 `g++` 加上 `
 ---
 
 > 作者:   
-> URL: https://ctj12461.github.io/blogs/contents/2022/multigenerator-document/  
+> URL: https://ctj12461.netlify.app/contents/2022/multigenerator-document/  
 

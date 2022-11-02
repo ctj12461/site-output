@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Game - 分类 - ctj12461's Blog</title><link>https://ctj12461.github.io/blogs/categories/game/</link><description>Game - 分类 - ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Sat, 06 Aug 2022 21:06:58 +0800</lastBuildDate><atom:link href="https://ctj12461.github.io/blogs/categories/game/" rel="self" type="application/rss+xml"/><item><title>Minecraft 运动学研究</title><link>https://ctj12461.github.io/blogs/contents/2022/motion-study-in-minecraft/</link><pubDate>Sat, 06 Aug 2022 21:06:58 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/motion-study-in-minecraft/</guid><description><![CDATA[<p>在造红石炮时，往往需要用到一些运动学的知识。以下是我对 Minecraft 的运动学的一些研究，应该会对设计红石炮有所帮助，</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Game - 分类 - ctj12461's Blog</title><link>https://ctj12461.netlify.app/categories/game/</link><description>Game - 分类 - ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Sat, 06 Aug 2022 21:06:58 +0800</lastBuildDate><atom:link href="https://ctj12461.netlify.app/categories/game/" rel="self" type="application/rss+xml"/><item><title>Minecraft 运动学研究</title><link>https://ctj12461.netlify.app/contents/2022/motion-study-in-minecraft/</link><pubDate>Sat, 06 Aug 2022 21:06:58 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/motion-study-in-minecraft/</guid><description><![CDATA[<p>在造红石炮时，往往需要用到一些运动学的知识。以下是我对 Minecraft 的运动学的一些研究，应该会对设计红石炮有所帮助，</p>
 <h2 id="前置知识">前置知识</h2>
 <ul>
 <li>在 Minecraft 中，我们通常只考虑实体的运动，而方块则与运动没有一点关系。实体的运动大体与高中物理相同，但需要考虑空气阻力的作用，这使得 Minecraft 中的运动更加真实但又更加复杂。</li>
@@ -77,11 +77,11 @@ $$</p>
 </div>
 </div><h3 id="实验验证">实验验证</h3>
 <p>在 Minecraft 中进行验证，可以通过中继器延时控制活塞的伸缩，用活塞挡住 TNT，从而控制 TNT 的实际下落时间。TNT 在 $4\ \text{s}$ 后会爆炸，可以用方块搭建一面墙作为标尺，利用 TNT 爆炸破坏墙面来确定其位置。</p>
-<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-sub-html="<h2>实验装置设计</h2>">
+<figure><a class="lightgallery" href="/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-thumbnail="/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-sub-html="<h2>实验装置设计</h2>">
     
   </a><figcaption class="image-caption">实验装置设计</figcaption>
   </figure>
-<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-sub-html="<h2>实验装置设计</h2>">
+<figure><a class="lightgallery" href="/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-thumbnail="/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-sub-html="<h2>实验装置设计</h2>">
     
   </a><figcaption class="image-caption">实验装置设计</figcaption>
   </figure>
@@ -92,7 +92,7 @@ $$</p>
 <li>计算好延迟，<strong>特别是活塞</strong></li>
 </ul>
 <p>进行三次实验，对每个时刻的下落高度取平均值。</p>
-<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-sub-html="<h2>实验结果</h2>">
+<figure><a class="lightgallery" href="/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-thumbnail="/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-sub-html="<h2>实验结果</h2>">
     
   </a><figcaption class="image-caption">实验结果</figcaption>
   </figure>

@@ -775,5 +775,5 @@ int main() {
 ---
 
 > 作者:   
-> URL: https://ctj12461.github.io/blogs/contents/2022/euler-function-and-euler-theorem-note/  
+> URL: https://ctj12461.netlify.app/contents/2022/euler-function-and-euler-theorem-note/  
 

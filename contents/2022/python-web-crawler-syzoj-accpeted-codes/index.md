@@ -306,5 +306,5 @@ if __name__ == "__main__":
 ---
 
 > 作者:   
-> URL: https://ctj12461.github.io/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/  
+> URL: https://ctj12461.netlify.app/contents/2022/python-web-crawler-syzoj-accpeted-codes/  
 

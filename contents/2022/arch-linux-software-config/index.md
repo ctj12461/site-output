@@ -227,5 +227,5 @@ $ sudo pacman -S kvantum
 ---
 
 > 作者:   
-> URL: https://ctj12461.github.io/blogs/contents/2022/arch-linux-software-config/  
+> URL: https://ctj12461.netlify.app/contents/2022/arch-linux-software-config/  
 

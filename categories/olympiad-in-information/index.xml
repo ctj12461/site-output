@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Olympiad in Information - 分类 - ctj12461's Blog</title><link>https://ctj12461.github.io/blogs/categories/olympiad-in-information/</link><description>Olympiad in Information - 分类 - ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Fri, 15 Apr 2022 23:39:44 +0800</lastBuildDate><atom:link href="https://ctj12461.github.io/blogs/categories/olympiad-in-information/" rel="self" type="application/rss+xml"/><item><title>AtCoder ARC 073E Ball Coloring 题解</title><link>https://ctj12461.github.io/blogs/contents/2022/atcoder-arc073e-solution/</link><pubDate>Fri, 15 Apr 2022 23:39:44 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/atcoder-arc073e-solution/</guid><description><![CDATA[<p>题目链接：<a href="https://atcoder.jp/contests/arc073/tasks/arc073_c"target="_blank" rel="external nofollow noopener noreferrer">https://atcoder.jp/contests/arc073/tasks/arc073_c</a>，题目大意如下：</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Olympiad in Information - 分类 - ctj12461's Blog</title><link>https://ctj12461.netlify.app/categories/olympiad-in-information/</link><description>Olympiad in Information - 分类 - ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Fri, 15 Apr 2022 23:39:44 +0800</lastBuildDate><atom:link href="https://ctj12461.netlify.app/categories/olympiad-in-information/" rel="self" type="application/rss+xml"/><item><title>AtCoder ARC 073E Ball Coloring 题解</title><link>https://ctj12461.netlify.app/contents/2022/atcoder-arc073e-solution/</link><pubDate>Fri, 15 Apr 2022 23:39:44 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/atcoder-arc073e-solution/</guid><description><![CDATA[<p>题目链接：<a href="https://atcoder.jp/contests/arc073/tasks/arc073_c"target="_blank" rel="external nofollow noopener noreferrer">https://atcoder.jp/contests/arc073/tasks/arc073_c</a>，题目大意如下：</p>
 <blockquote>
 <p>给出 $n$ 个数对 $(a_i, b_i)$，可以给数对中的数染色，一种是 $a_i$ 红 $b_i$ 蓝，另一种则反过来。
 定义以下 4 个变量：</p>
@@ -328,7 +328,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>二分图匹配学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/bipartite-graph-matching-note/</link><pubDate>Tue, 22 Feb 2022 13:31:06 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/bipartite-graph-matching-note/</guid><description><![CDATA[<h2 id="二分图">二分图</h2>
+</div>]]></description></item><item><title>二分图匹配学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/bipartite-graph-matching-note/</link><pubDate>Tue, 22 Feb 2022 13:31:06 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/bipartite-graph-matching-note/</guid><description><![CDATA[<h2 id="二分图">二分图</h2>
 <h3 id="定义">定义</h3>
 <p>如果一个图 $G=(V,E)$ 中的结点可以被分为两个部分，且两个部分之内的点互相没有连边，则称这种图为二分图。如果每个结点的度数相等且都为 $k$，则称这种二分图为 $k$ - 正则二分图。</p>
 <h3 id="判断">判断</h3>
@@ -1645,7 +1645,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>莫比乌斯反演学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/mobius-inversion-note/</link><pubDate>Sun, 20 Feb 2022 11:23:07 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/mobius-inversion-note/</guid><description><![CDATA[<p>莫比乌斯反演可以用于优化一类式子的计算。</p>
+</div>]]></description></item><item><title>莫比乌斯反演学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/mobius-inversion-note/</link><pubDate>Sun, 20 Feb 2022 11:23:07 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/mobius-inversion-note/</guid><description><![CDATA[<p>莫比乌斯反演可以用于优化一类式子的计算。</p>
 <h2 id="莫比乌斯函数">莫比乌斯函数</h2>
 <h3 id="定义">定义</h3>
 <p>莫比乌斯函数的定义如下：</p>
@@ -2785,7 +2785,7 @@ $$</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>同余方程学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/congruence-equation-note/</link><pubDate>Sun, 13 Feb 2022 21:40:02 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/congruence-equation-note/</guid><description><![CDATA[<p>解各种同余方程是同余问题的一个重要部分，本文介绍各种同余方程的求解方法。</p>
+</div>]]></description></item><item><title>同余方程学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/congruence-equation-note/</link><pubDate>Sun, 13 Feb 2022 21:40:02 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/congruence-equation-note/</guid><description><![CDATA[<p>解各种同余方程是同余问题的一个重要部分，本文介绍各种同余方程的求解方法。</p>
 <h2 id="二元线性不定方程">二元线性不定方程</h2>
 <h3 id="形式">形式</h3>
 <p>不定方程的范围很广泛，只要没有确定的解的方程都可以叫不定方程。本文主要讨论数论中的不定方程。</p>
@@ -3861,7 +3861,7 @@ $$</p>
 ny \equiv z \pmod{m}
 $$</p>
 <p>代码就不写了，上面组合一下就可以了。</p>
-]]></description></item><item><title>Burnside 引理 &amp; Pólya 定理学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/burnside-lemma-and-polya-theorem-note/</link><pubDate>Sat, 12 Feb 2022 19:14:24 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/burnside-lemma-and-polya-theorem-note/</guid><description><![CDATA[<p>Burnside 引理和 Pólya 定理主要用于解决计算本质不同方案数的计数问题。</p>
+]]></description></item><item><title>Burnside 引理 &amp; Pólya 定理学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/burnside-lemma-and-polya-theorem-note/</link><pubDate>Sat, 12 Feb 2022 19:14:24 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/burnside-lemma-and-polya-theorem-note/</guid><description><![CDATA[<p>Burnside 引理和 Pólya 定理主要用于解决计算本质不同方案数的计数问题。</p>
 <h2 id="群论">群论</h2>
 <h3 id="基本定义">基本定义</h3>
 <p>群可以看成是一个由集合和某个二元运算组成的二元组 $(S,\cdot)$，这里的 $\cdot$ 就代表一个二元运算，这个二元运算需要满足结合律、存在单位元和逆元。群有很多的种类，比如置换群、循环群、矩阵群等，其中置换群就是我们接下来要介绍的。</p>
@@ -5112,7 +5112,7 @@ $$</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>欧拉函数 &amp; 欧拉定理学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/euler-function-and-euler-theorem-note/</link><pubDate>Thu, 10 Feb 2022 08:37:50 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/euler-function-and-euler-theorem-note/</guid><description><![CDATA[<p>欧拉函数 $\varphi(n)$ 是一个重要的数论函数，它表示 $[1, n]$ 中与 $n$ 互质的数的个数。</p>
+</div>]]></description></item><item><title>欧拉函数 &amp; 欧拉定理学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/euler-function-and-euler-theorem-note/</link><pubDate>Thu, 10 Feb 2022 08:37:50 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/euler-function-and-euler-theorem-note/</guid><description><![CDATA[<p>欧拉函数 $\varphi(n)$ 是一个重要的数论函数，它表示 $[1, n]$ 中与 $n$ 互质的数的个数。</p>
 <h2 id="欧拉函数性质">欧拉函数性质</h2>
 <h3 id="积性函数">积性函数</h3>
 <p>积性函数的定义是：如果一个函数 $f(n)$ 满足 $\gcd(a,b)=1$ 时 $f(ab)=f(a)f(b)$，则 $f(n)$ 为积性函数。
@@ -6366,7 +6366,7 @@ $$</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>拉格朗日插值学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/lagrange-interpolation-note/</link><pubDate>Mon, 07 Feb 2022 23:53:43 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/lagrange-interpolation-note/</guid><description><![CDATA[<p>拉格朗日插值是众多插值算法中的一种，插值是通过一些点来求出过这些点的多项式函数的过程。</p>
+</div>]]></description></item><item><title>拉格朗日插值学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/lagrange-interpolation-note/</link><pubDate>Mon, 07 Feb 2022 23:53:43 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/lagrange-interpolation-note/</guid><description><![CDATA[<p>拉格朗日插值是众多插值算法中的一种，插值是通过一些点来求出过这些点的多项式函数的过程。</p>
 <h2 id="算法思想">算法思想</h2>
 <h3 id="构造函数">构造函数</h3>
 <p>给出 $n + 1$ 个点 $(x_1,y_1),(x_2,y_2),\dots,(x_n,y_n),(x_{n+1},y_{n+1})$，要求出过这些点的 $n$ 次多项式函数（也称该函数的度为 $n$），先考虑对每个点构造一个函数，第 $i$ 个点的函数为 $f_i(x)$，满足：</p>
@@ -7234,7 +7234,7 @@ $$</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>高斯消元学习笔记</title><link>https://ctj12461.github.io/blogs/contents/2022/gauss-elimination-note/</link><pubDate>Sun, 06 Feb 2022 16:06:35 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/gauss-elimination-note/</guid><description><![CDATA[<p>高斯消元主要用于求解线性方程组的解，同时可以解决某些有后效性的 DP 问题，</p>
+</div>]]></description></item><item><title>高斯消元学习笔记</title><link>https://ctj12461.netlify.app/contents/2022/gauss-elimination-note/</link><pubDate>Sun, 06 Feb 2022 16:06:35 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/gauss-elimination-note/</guid><description><![CDATA[<p>高斯消元主要用于求解线性方程组的解，同时可以解决某些有后效性的 DP 问题，</p>
 <h2 id="算法思想">算法思想</h2>
 <h3 id="增广矩阵">增广矩阵</h3>
 <p>为了更方便地求解方程组，可以将系数和常数项放入矩阵，接下来就可以用一些矩阵的操作来消元了。</p>
@@ -8391,7 +8391,7 @@ $$</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>Luogu P3647 连珠线题解</title><link>https://ctj12461.github.io/blogs/contents/2022/luogu-p3647-solution/</link><pubDate>Fri, 04 Feb 2022 19:41:12 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/luogu-p3647-solution/</guid><description><![CDATA[<p>这里给出一种无需换根的 DP 思路。</p>
+</div>]]></description></item><item><title>Luogu P3647 连珠线题解</title><link>https://ctj12461.netlify.app/contents/2022/luogu-p3647-solution/</link><pubDate>Fri, 04 Feb 2022 19:41:12 +0800</pubDate><author>作者</author><guid>https://ctj12461.netlify.app/contents/2022/luogu-p3647-solution/</guid><description><![CDATA[<p>这里给出一种无需换根的 DP 思路。</p>
 <h2 id="part-1">Part 1</h2>
 <p>我们从结点的添加方式入手，可以把结点分为三类：</p>
 <ul>

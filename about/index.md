@@ -8,5 +8,5 @@ Hello everyone, 我是 ctj12461，英文名是 Justin Chen（在 [GitHub](https:
 ---
 
 > 作者: ctj12461  
-> URL: https://ctj12461.github.io/blogs/about/  
+> URL: https://ctj12461.netlify.app/about/  
 
