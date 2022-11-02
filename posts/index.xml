@@ -1,0 +1,882 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>所有文章 - ctj12461's Blog</title><link>https://ctj12461.github.io/blogs/posts/</link><description>所有文章 | ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Sat, 06 Aug 2022 21:06:58 +0800</lastBuildDate><atom:link href="https://ctj12461.github.io/blogs/posts/" rel="self" type="application/rss+xml"/><item><title>Minecraft 运动学研究</title><link>https://ctj12461.github.io/blogs/contents/2022/motion-study-in-minecraft/</link><pubDate>Sat, 06 Aug 2022 21:06:58 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/motion-study-in-minecraft/</guid><description><![CDATA[<p>在造红石炮时，往往需要用到一些运动学的知识。以下是我对 Minecraft 的运动学的一些研究，应该会对设计红石炮有所帮助，</p>
+<h2 id="前置知识">前置知识</h2>
+<ul>
+<li>在 Minecraft 中，我们通常只考虑实体的运动，而方块则与运动没有一点关系。实体的运动大体与高中物理相同，但需要考虑空气阻力的作用，这使得 Minecraft 中的运动更加真实但又更加复杂。</li>
+<li>在 Minecraft 中，长度单位有格和米 $(\text{m})$ 两种，$1$ 格 $=1\ \text{m}$，所以它们在数值上是相同的，所以一般直接使用米作为长度单位。</li>
+<li>时间单位有三种，分别是游戏刻 $(\text{gt})$、红石刻 $(\text{rt})$ 和秒 $(\text{s})$，它们有这样的换算关系：$1\ \text{gt}=0.5\ \text{rt}=1\ \text{s}$。这三种单位都很常用。</li>
+<li>Minecraft 中不同实体的重力加速度可能是不同的。</li>
+<li>尽管现实中的运动是连续的，但由于计算机和 Minecraft 的实现原因，Minecraft 的运动是离散的，其每 $1\ \text{gt}$ 计算一次，因此，各种复杂的计算可以通过计算每 $1\ \text{gt}$ 的运动情况再累加的方法实现。</li>
+</ul>
+<h2 id="竖直方向上的运动">竖直方向上的运动</h2>
+<h3 id="理论计算">理论计算</h3>
+<p>这里以 TNT 为研究对象。在 <a href="https://minecraft.fandom.com/wiki/Entity#Motion_of_entities"target="_blank" rel="external nofollow noopener noreferrer">Minecraft Wiki</a> 上有各种实体的相关参数，查阅得知 TNT 的重力加速度 $a = 0.04\ \operatorname{m/gt^2}=16\ \operatorname{m/s^2}$，阻力系数 $k=0.02\ \operatorname{gt^{-1}}=0.4\ \operatorname{gt^{-1}}$。原文中提到的是 Drag，中文版中翻译为阻力，但其实它是表示在一定速度时产生的产生空气阻力的加速度，即 $a_f=kv$，所以我觉得阻力系数会更恰当。</p>
+<p>前面提到 Minecraft 中的运动可以拆分为每个 $\operatorname{gt}$ 进行计算，所以计算过程就像是数列的计算。</p>
+<p>这里我们研究 TNT 在竖直方向上初速度为 $0$ 的运动。设 $v(t)$ 表示在 $t\ \operatorname{gt}$ 时的速度，$h(t)$ 为此时下落的高度。则 $v(0) = 0$。</p>
+<p>假设每 $\operatorname{gt}$ 内 TNT 做匀变速直线运动，则运动状态有如下关系：</p>
+<p>$$
+\begin{split}
+&amp;v(t) = v(t - 1) + [a - kv(t - 1)]\\
+&amp;h(t) = h(t - 1) + \frac{v(t - 1) + v(t)}{2}\\
+\end{split}
+$$</p>
+<p>使用 Python 3 实现计算：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">81</span>
+</span></span><span class="line"><span class="cl"><span class="n">h</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">81</span>
+</span></span><span class="line"><span class="cl"><span class="n">k</span> <span class="o">=</span> <span class="mf">0.02</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="mf">0.04</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">81</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span>
+</span></span><span class="line"><span class="cl">    <span class="n">h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">8</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;i = </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, t = </span><span class="si">{</span><span class="n">i</span> <span class="o">/</span> <span class="mi">20</span><span class="si">}</span><span class="s2"> s, h = </span><span class="si">{</span><span class="n">h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> m&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>输出结果如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">i = 8, t = 0.4 s, h = 1.2 m
+</span></span><span class="line"><span class="cl">i = 16, t = 0.8 s, h = 4.7 m
+</span></span><span class="line"><span class="cl">i = 24, t = 1.2 s, h = 10.0 m
+</span></span><span class="line"><span class="cl">i = 32, t = 1.6 s, h = 16.9 m
+</span></span><span class="line"><span class="cl">i = 40, t = 2.0 s, h = 25.1 m
+</span></span><span class="line"><span class="cl">i = 48, t = 2.4 s, h = 34.5 m
+</span></span><span class="line"><span class="cl">i = 56, t = 2.8 s, h = 44.9 m
+</span></span><span class="line"><span class="cl">i = 64, t = 3.2 s, h = 56.2 m
+</span></span><span class="line"><span class="cl">i = 72, t = 3.6 s, h = 68.1 m
+</span></span><span class="line"><span class="cl">i = 80, t = 4.0 s, h = 80.7 m
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="实验验证">实验验证</h3>
+<p>在 Minecraft 中进行验证，可以通过中继器延时控制活塞的伸缩，用活塞挡住 TNT，从而控制 TNT 的实际下落时间。TNT 在 $4\ \text{s}$ 后会爆炸，可以用方块搭建一面墙作为标尺，利用 TNT 爆炸破坏墙面来确定其位置。</p>
+<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-sub-html="<h2>实验装置设计</h2>">
+    
+  </a><figcaption class="image-caption">实验装置设计</figcaption>
+  </figure>
+<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-sub-html="<h2>实验装置设计</h2>">
+    
+  </a><figcaption class="image-caption">实验装置设计</figcaption>
+  </figure>
+<p>为了减小实验误差，可采取如下措施：</p>
+<ul>
+<li>选择爆炸抗性较高的方块</li>
+<li>适当增大墙与 TNT 下落轨迹的距离，因为 TNT 伤害按照球体进行计算，拉长距离可以让损害的面积减小，TNT 中心的高度更精确</li>
+<li>计算好延迟，<strong>特别是活塞</strong></li>
+</ul>
+<p>进行三次实验，对每个时刻的下落高度取平均值。</p>
+<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-sub-html="<h2>实验结果</h2>">
+    
+  </a><figcaption class="image-caption">实验结果</figcaption>
+  </figure>
+<p>进行数据处理，并与理论分析得到的数据进行比较：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><strong>下落时间 $t/\text{s}$</strong></th>
+<th style="text-align:center">$0.8$</th>
+<th style="text-align:center">$1.2$</th>
+<th style="text-align:center">$1.6$</th>
+<th style="text-align:center">$2.0$</th>
+<th style="text-align:center">$2.4$</th>
+<th style="text-align:center">$2.8$</th>
+<th style="text-align:center">$3.2$</th>
+<th style="text-align:center">$3.6$</th>
+<th style="text-align:center">$4.0$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>第一组下落高度 $h_1/\text{m}$</strong></td>
+<td style="text-align:center">$4.5$</td>
+<td style="text-align:center">$10.2$</td>
+<td style="text-align:center">$17.5$</td>
+<td style="text-align:center">$25.6$</td>
+<td style="text-align:center">$35.3$</td>
+<td style="text-align:center">$45.3$</td>
+<td style="text-align:center">$56.4$</td>
+<td style="text-align:center">$68.0$</td>
+<td style="text-align:center">$79.9$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>第二组下落高度 $h_2/\text{m}$</strong></td>
+<td style="text-align:center">$4.6$</td>
+<td style="text-align:center">$10.7$</td>
+<td style="text-align:center">$17.3$</td>
+<td style="text-align:center">$25.8$</td>
+<td style="text-align:center">$34.9$</td>
+<td style="text-align:center">$45.2$</td>
+<td style="text-align:center">$56.4$</td>
+<td style="text-align:center">$69.1$</td>
+<td style="text-align:center">$79.7$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>第三组下落高度 $h_3/\text{m}$</strong></td>
+<td style="text-align:center">$5.0$</td>
+<td style="text-align:center">$10.5$</td>
+<td style="text-align:center">$17.1$</td>
+<td style="text-align:center">$25.7$</td>
+<td style="text-align:center">$35.0$</td>
+<td style="text-align:center">$45.8$</td>
+<td style="text-align:center">$56.9$</td>
+<td style="text-align:center">$68.6$</td>
+<td style="text-align:center">$79.7$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>平均下落高度 $h/\text{m}$</strong></td>
+<td style="text-align:center">$5.0$</td>
+<td style="text-align:center">$10.4$</td>
+<td style="text-align:center">$17.3$</td>
+<td style="text-align:center">$25.7$</td>
+<td style="text-align:center">$35.1$</td>
+<td style="text-align:center">$45.4$</td>
+<td style="text-align:center">$56.6$</td>
+<td style="text-align:center">$68.6$</td>
+<td style="text-align:center">$79.8$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>理论下落高度 $h_0/\text{m}$</strong></td>
+<td style="text-align:center">$4.7$</td>
+<td style="text-align:center">$10.0$</td>
+<td style="text-align:center">$16.9$</td>
+<td style="text-align:center">$25.1$</td>
+<td style="text-align:center">$34.5$</td>
+<td style="text-align:center">$44.9$</td>
+<td style="text-align:center">$56.2$</td>
+<td style="text-align:center">$68.1$</td>
+<td style="text-align:center">$80.7$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>下落高度差值 $\Delta h/\text{m}$</strong></td>
+<td style="text-align:center">$0.3$</td>
+<td style="text-align:center">$0.4$</td>
+<td style="text-align:center">$0.4$</td>
+<td style="text-align:center">$0.6$</td>
+<td style="text-align:center">$0.6$</td>
+<td style="text-align:center">$0.5$</td>
+<td style="text-align:center">$0.4$</td>
+<td style="text-align:center">$0.5$</td>
+<td style="text-align:center">$0.9$</td>
+</tr>
+</tbody>
+</table>
+<p>由于通过方块的损毁来采集数据，而损毁区域的大小大概可以用一个 $4\times 4$ 的矩形框起来，再加上爆炸有很多不确定因素，所以系统误差较大，而 $\Delta h$ 大多数都小于 $0.9\ \text{m}$，在可接受范围内，所以这种计算方式是可行的。</p>
+<h3 id="应用">应用</h3>
+<p>Minecraft 中的速度是可以合成和分解的，所以竖直方向上的运动不管在什么时候都可以拿出来独立分析。</p>
+<p>我们可以通过该理论计算任何实体在竖直方向上的运动情况，尤其是在红石炮中对 TNT 弹头的飞行时间进行计算和调整，以及发射时相关时序的控制。</p>
+<h2 id="水平方向上的运动">水平方向上的运动</h2>
+<p>其实水平方向上的运动与竖直方向上的大体类似，但是有点实体在水平方向（$x,z$ 轴）的阻力系数与竖直方向的不同，所以需要注意。</p>
+<p>但是考虑到实际应用，一般情况下都是涉及到红石炮这种装置，其在水平方向上能够提供往往非常巨大，阻力远小于动力，且红石炮的弹头在飞行过程中在水平方向上不受重力，可以近似为匀速直线运动，不需要用到这么复杂的理论。</p>
+]]></description></item><item><title>第一桶金</title><link>https://ctj12461.github.io/blogs/contents/2022/the-first-pod-of-gold/</link><pubDate>Sun, 19 Jun 2022 20:03:56 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/the-first-pod-of-gold/</guid><description><![CDATA[<p>前几天接到通知，福州市教育局要为 2021 年的奥赛获奖者颁发一笔奖金，我去年获得了 NOIP 一等奖，所以就获得了 2000 元的奖励。听说这个消息后，我虽表面上毫无波澜，没有什么特别的表现，内心还是很激动的，这一笔奖金，应该可以算是我人生中完全通过自己的努力挣得的第一桶金吧。虽然 2000 元的数目可能不是非常多，其远比不上 4 年光阴的艰苦奋斗，但是它是一种奖励，更是一个证明，对于我来说还是 very remarkable &amp; meaningful 的。有了付出才会有回报，才能够体会到这种喜悦，这或许就是劳动的意义。</p>
+<p>在这里也要感谢父母的支持、教练的教导已经同学的陪伴，是你们让这段时光充满乐趣，难以忘却。</p>
+]]></description></item><item><title>Hugo 添加 Netlify CMS 支持</title><link>https://ctj12461.github.io/blogs/contents/2022/hugo-netlify-cms-support/</link><pubDate>Wed, 04 May 2022 21:15:39 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/hugo-netlify-cms-support/</guid><description><![CDATA[<p>为了解决偶尔在手机上写博客这一<del>不存在</del>的需求，考虑为这个博客添加一个 CMS。在很早以前，我就用过 Netlify CMS，比较熟悉，所以就继续用它了。</p>
+<p>这里假设源码储存在 GitHub 上，且博客部署在 Vercel 上，其他原理类似。</p>
+<h2 id="原理">原理</h2>
+<p>像 Netlify CMS 这样的 Headless CMS，一般是独立于静态博客的其他组件的。以我这个博客为例，使用 Git 来管理由 makrdown 组成的博客原始内容，储存在 GitHub 上，并通过 GitHub Action 来构建，最后部署到 Vercel 上。而 Netlify CMS 要与它们一起工作，需要做比较多的工作。</p>
+<p>整个 Netlify CMS 的部署要考虑以下几个内容：</p>
+<ul>
+<li>获取博客源代码</li>
+<li>提供修改的 UI</li>
+<li>提交对内容的修改</li>
+</ul>
+<p>接下来就对这几个部分进行讲解。</p>
+<h2 id="添加-netlify-cms-到站点">添加 Netlify CMS 到站点</h2>
+<p>Hugo 中，任何放在 <code>static</code> 目录下的东西都不会被渲染，所以在 <code>static</code> 目录下添加一个目录，用于访问 CMS，这里就叫 <code>management</code>，然后按照<a href="https://www.netlifycms.org/docs/add-to-your-site/"target="_blank" rel="external nofollow noopener noreferrer">官方的步骤</a>添加两个文件 <code>config.yml</code> 和 <code>index.html</code>，分别表示 CMS 配置文件和 CMS 访问的 UI。</p>
+<p>目录结构如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">blog
+</span></span><span class="line"><span class="cl">└── static
+</span></span><span class="line"><span class="cl">    └── management
+</span></span><span class="line"><span class="cl">        ├── config.yml
+</span></span><span class="line"><span class="cl">        └── index.html
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在 <code>index.html</code> 中添加以下代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!doctype html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;utf-8&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;viewport&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;width=device-width, initial-scale=1.0&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Content Manager<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c">&lt;!-- Alternative CDN: https://cdn.jsdelivr.net/npm/netlify-cms@^2.0.0/dist/netlify-cms.js --&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>接下来填写配置文件 <code>config.yml</code>，建议现在本地测试：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">backend</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">github</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l">owner/repo</span><span class="w"> </span><span class="c"># 博客源码仓库</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l">your-branch</span><span class="w"> </span><span class="c"># 源码的分支</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">publish_mode</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;editorial_workflow&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">media_folder</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;static/images&#34;</span><span class="w"> </span><span class="c"># 图片存放的目录</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">public_folder</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;images&#34;</span><span class="w"> </span><span class="c"># 构建后图片存放的目录</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># collections 中的每一项代表一种文章类型</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">collections</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;posts&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Posts&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">folder</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;content/posts&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{slug}}/index&#34;</span><span class="w"> </span><span class="c"># {{slug}} 即 {{fields.filename}}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">slug</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{fields.filename}}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">media_folder</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w"> </span><span class="c"># 相对于 content/posts/{{fields.filename}}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">public_folder</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w"> </span><span class="c"># 相对于 content/posts/{{fields.filename}}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="c"># 允许创建新文章</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">fields</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- {<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;File Name&#34;</span><span class="nt">, name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;filename&#34;</span><span class="nt">, widget</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;string&#34;</span><span class="nt">, default</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="nt">, required</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- {<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Title&#34;</span><span class="nt">, name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;title&#34;</span><span class="nt">, widget</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;string&#34;</span>}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- {<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Date&#34;</span><span class="nt">, name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;date&#34;</span><span class="nt">, widget</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;datetime&#34;</span>}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- {<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Draft&#34;</span><span class="nt">, name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;draft&#34;</span><span class="nt">, widget</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;boolean&#34;</span><span class="nt">, default</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- {<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Tags&#34;</span><span class="nt">, name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tags&#34;</span><span class="nt">, widget</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;list&#34;</span>}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- {<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Categories&#34;</span><span class="nt">, name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;categories&#34;</span><span class="nt">, widget</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;list&#34;</span>}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- {<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Body&#34;</span><span class="nt">, name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;body&#34;</span><span class="nt">, widget</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;markdown&#34;</span>}<span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这应该还是比较好懂的，我采用了 Hugo 的 Page Bundle 功能，每个位置单独一个目录，其中 <code>index.md</code> 存放内容，同时图片等资源也放在同一目录，可以直接以相对路径的方式引用。当然，Netlify CMS 现在只是提供了全局的 <code>media_folder</code> 的上传，其他的还是要手动用 Git 上传。</p>
+<p>在 <code>collections.fields</code> 中配置的是文章的处理，除了最后一行的 <code>- {label: &quot;Body&quot;, name: &quot;body&quot;, widget: &quot;markdown&quot;}</code> 是用于编写正文的，其他都是处理元信息，通过 Front-Matter 的方式存储。</p>
+<p>注意到 <code>File Name</code> 那一行是为了让 Netlify CMS 能够知道文章是在哪个目录下的，如果你不介意直接 Netlify CMS 生成的默认 <code>slug</code> 作为目录的名字，那可以直接去掉 <code>slug: &quot;{{fields.filename}}&quot;</code> 这一项。</p>
+<p>进阶配置可以参考以下链接：</p>
+<ul>
+<li><a href="https://www.netlifycms.org/docs/configuration-options/"target="_blank" rel="external nofollow noopener noreferrer">https://www.netlifycms.org/docs/configuration-options/</a></li>
+<li><a href="https://www.netlifycms.org/docs/collection-types/"target="_blank" rel="external nofollow noopener noreferrer">https://www.netlifycms.org/docs/collection-types/</a></li>
+<li><a href="https://www.netlifycms.org/docs/widgets/"target="_blank" rel="external nofollow noopener noreferrer">https://www.netlifycms.org/docs/widgets/</a></li>
+</ul>
+<p>接下来在本地运行 <code>hugo serve</code>，访问 <code>http://localhost:1313/management/</code>，应该就可以正常访问了。</p>
+<h2 id="添加认证服务">添加认证服务</h2>
+<p>接下来如果直接把代码部署到 GitHub 上，你会发现登录。这是因为 Netlify CMS 相对于 GitHub 是第三方应用，想要访问和修改你的仓库是需要授权的，这要通过 OAuth 解决。如果使用 Netlify 部署网站的话，Netlify 已经做好了相关工作，而使用 Vercel，就缺少一个 OAuth 的认证服务器。好在有人已经做出了现成的解决方案了，我们可以不用再造轮子。</p>
+<h3 id="部署-oauth-服务器">部署 OAuth 服务器</h3>
+<p>建议先看看 <a href="https://github.com/ublabs/netlify-cms-oauth"target="_blank" rel="external nofollow noopener noreferrer">netlify-cms-oauth</a> 的 readme，接下来就使用它。</p>
+<p>按照 readme 里的办法，我们只要点击那个蓝色的 Deploy 按钮，就可以把这个认证服务部署到自己的 Vercel 上，中途可能要求填写 <code>OAUTH_GITHUB_CLIENT_ID</code> 等环境变量，这个可以先随便填，和后面的东西无关。或者直接使用这个人的部署好的服务。</p>
+<h3 id="创建-github-oauth-app">创建 GitHub OAuth App</h3>
+<p>接下来，假设你使用的服务器的域名是 <code>netlify-cms-oauth.vercel.app</code>。</p>
+<p>在 <a href="https://github.com/settings/developers"target="_blank" rel="external nofollow noopener noreferrer">Developer settings</a> 中点击 New OAuth App，在 Homepage URL 中填上你的博客的 URL，Authorization callback URL 填上 <code>https://netlify-cms-oauth.vercel.app/callback</code>，创建即可。</p>
+<p>接下来再点击 Generate a new client secret，用于接下来的操作。</p>
+<h3 id="设置-vercel-环境变量">设置 Vercel 环境变量</h3>
+<p>在 Vercel 中的博客站点的设置中编辑 Environment Variables，添加 <code>OAUTH_GITHUB_CLIENT_ID</code> 为 Client ID，<code>OAUTH_GITHUB_CLIENT_SECRET</code> 为 Client secrets。</p>
+<p>我不知道要不要把上面的 OAuth 认证服务器的环境变量也改成这个，但是我测试的结果是没有影响。</p>
+<h3 id="修改配置文件">修改配置文件</h3>
+<p>在 <code>config.yml</code> 的 <code>backend</code> 中添加 <code>base_url: https://netlify-cms-oauth.vercel.app</code>，设置认证服务器。</p>
+<p>接下来再部署，应该就可以使用了。</p>
+]]></description></item><item><title>Python 网络爬虫获取 SYZOJ AC 代码</title><link>https://ctj12461.github.io/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/</link><pubDate>Mon, 18 Apr 2022 15:23:12 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/</guid><description><![CDATA[<p>写本文之前，我共有两百多道题目在校内 <code>OJ</code> 上通过，由于某些原因，想要保存这些代码，于是想到使用 <code>Python</code> 实现自动爬取代码。同时考虑到效率问题，决定使用 <code>aiohttp</code> 编写一个高性能异步爬虫。</p>
+<h2 id="实现目标分析">实现目标分析</h2>
+<p>这个爬虫需要能够爬取所有的已通过题目的列表，并继续爬取这些已通过题目的代码，随后保存到文件中。</p>
+<p>校内 <code>OJ</code> 基于 <code>SYZOJ</code> 搭建，该 <code>OJ</code> 的项目地址为 <a href="https://github.com/syzoj/syzoj"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/syzoj/syzoj</a>，故接下来的代码都是基于其实现的。</p>
+<p>由于这个 <code>OJ</code> 的外网域名的带宽很小，一个网页最坏情况下需要花费 <code>2～3</code> 秒的时间，所以必须采用异步实现。这里就使用 <code>aiohttp</code> 了。</p>
+<h2 id="获取-cookie">获取 Cookie</h2>
+<p>由于直接从浏览器里获取的 <code>Cookie</code> 无法正常使用，传给服务器无法识别，猜测是编码问题，所以使用在爬虫运行时即时获取 <code>Cookie</code> 的办法。</p>
+<p>分析 <code>SYZOJ</code> 的登陆<a href="https://github.com/syzoj/syzoj/blob/master/views/login.ejs"target="_blank" rel="external nofollow noopener noreferrer">页面源码</a>，找到如下代码片段：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">login</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">password</span> <span class="o">=</span> <span class="nx">md5</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">&#34;#password&#34;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&#34;syzoj2_xxx&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">$</span><span class="p">(</span><span class="s2">&#34;#login&#34;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s2">&#34;loading&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">url</span><span class="o">:</span> <span class="s2">&#34;/api/login&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;username&#34;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&#34;#username&#34;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;password&#34;</span><span class="o">:</span> <span class="nx">password</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">async</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">error_code</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">error_code</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">switch</span> <span class="p">(</span><span class="nx">error_code</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="mi">1001</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">show_error</span><span class="p">(</span><span class="s2">&#34;用户不存在&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="mi">1002</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">show_error</span><span class="p">(</span><span class="s2">&#34;密码错误&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="mi">1003</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">show_error</span><span class="p">(</span><span class="s2">&#34;您尚未设置密码，请通过下方「找回密码」来设置您的密码。&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">success</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">session_id</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">show_error</span><span class="p">(</span><span class="s2">&#34;未知错误&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">$</span><span class="p">(</span><span class="s2">&#34;#login&#34;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&#34;登录&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">$</span><span class="p">(</span><span class="s2">&#34;#login&#34;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s2">&#34;loading&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">error</span><span class="o">:</span>  <span class="kd">function</span><span class="p">(</span><span class="nx">XMLHttpRequest</span><span class="p">,</span> <span class="nx">textStatus</span><span class="p">,</span> <span class="nx">errorThrown</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">alert</span><span class="p">(</span><span class="nx">XMLHttpRequest</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">show_error</span><span class="p">(</span><span class="s2">&#34;未知错误&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">$</span><span class="p">(</span><span class="s2">&#34;#login&#34;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&#34;登录&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以发现，<code>SYZOJ</code> 通过 <code>/api/login</code> 这个 <code>Web API</code> 发送请求获取 <code>Cookie</code>，使用 <code>POST</code> 方法，数据为 <code>username</code> 和 <code>password</code>，分别为用户名和密码加上 <code>syzoj2_xxx</code> 这个 <code>salt</code> 的 <code>MD5</code>，所以可以使用以下 <code>Python</code> 代码获取 <code>Cookie</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_password_md5</span><span class="p">(</span><span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">password</span> <span class="o">+=</span> <span class="s2">&#34;syzoj2_xxx&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">init_cookie</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># host 为 OJ 域名</span>
+</span></span><span class="line"><span class="cl">        <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">host</span> <span class="o">+</span> <span class="s2">&#34;/api/login&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;username&#34;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;password&#34;</span><span class="p">:</span> <span class="n">get_password_md5</span><span class="p">(</span><span class="n">password</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">cookies</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>随后就直接将 <code>Cookie</code> 传给 <code>ClientSession</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cookie</span> <span class="o">=</span> <span class="k">await</span> <span class="n">init_cookie</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">(</span><span class="n">cookies</span><span class="o">=</span><span class="n">cookie</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Failed to login.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Succeeded to get cookie.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># ...</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="获取通过题目列表">获取通过题目列表</h2>
+<p>这里通过抓取题目页面来获取题目列表，如果一道题目已经通过，题目前面就会有一个绿色的勾，指向 <code>AC</code> 记录。</p>
+<figure><a class="lightgallery" href="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-thumbnail="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/problem-page.png" data-sub-html="<h2>题目列表</h2>">
+    
+  </a><figcaption class="image-caption">题目列表</figcaption>
+  </figure>
+<p>可以发现题目列表被放在整个页面的唯一一个 <code>&lt;table&gt;</code> 标签中，每一道题目被放在表格中的每一行 <code>&lt;tr&gt;</code> 中，具体结构如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">table</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ui very basic center aligned table&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="c">&lt;!-- ... --&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">tbody</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">tr</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;height: 44px; &#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="c">&lt;!-- 如果没有提交记录，则接下来这个 td 为空 --&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="c">&lt;!-- 通过记录 --&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;/submission/{id}&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                    <span class="c">&lt;!-- AC 状态 --&gt;</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;status accepted&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">&lt;</span><span class="nt">i</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;checkmark icon&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">i</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="c">&lt;!-- 题目编号 --&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;&lt;</span><span class="nt">b</span><span class="p">&gt;</span>1<span class="p">&lt;/</span><span class="nt">b</span><span class="p">&gt;&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">td</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;left aligned&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="c">&lt;!-- 题目名称和链接 --&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">&lt;</span><span class="nt">a</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;vertical-align: middle; &#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;/problem/1&#34;</span><span class="p">&gt;</span>A + B Problem<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="c">&lt;!-- ... --&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以可以先用以下代码获取题目页面 <code>HTML</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">get_problem_page_content</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">,</span> <span class="n">page_num</span><span class="p">:</span> <span class="nb">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">host</span> <span class="o">+</span> <span class="s2">&#34;/problems&#34;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;page&#34;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">page_num</span><span class="p">)}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后使用 <code>BeautifulSoup</code> 处理 <code>HTML</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">check_problem_accepted</span><span class="p">(</span><span class="n">tag</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;span&#34;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;status accepted&#34;</span><span class="p">)</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">problem_id</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 获得保存文件名</span>
+</span></span><span class="line"><span class="cl">    <span class="n">problem_name</span> <span class="o">=</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&#34;vertical-align: middle; &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># 如果某些题目要特殊权限，则会在后面在显示一个 &lt;span&gt;, 不可以直接用 tag.string</span>
+</span></span><span class="line"><span class="cl">        <span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">,</span> <span class="s2">&#34;-&#34;</span><span class="p">)</span> <span class="c1"># / 不可以作为文件名的一部分</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">submission_url</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="s2">&#34;href&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">problem_id</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">problem_name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">host</span> <span class="o">+</span> <span class="n">submission_url</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_accepted_problems</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">soup</span> <span class="o">=</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">problem_table</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;tbody&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">accepted_problems_dict</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 处理每一行，如果是通过题目则加入字典</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">problem_table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&#34;tr&#34;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">res</span> <span class="o">=</span> <span class="n">check_problem_accepted</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">accepted_problems_dict</span><span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">accepted_problems_dict</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>异步爬取所有页面的题目：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">process_problem_page</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">,</span> <span class="n">page_num</span><span class="p">:</span> <span class="nb">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_problem_page_content</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">page_num</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">get_accepted_problems</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">get_problems</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">,</span> <span class="n">page_nums</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">problems_dict</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="o">*</span><span class="p">[</span><span class="n">process_problem_page</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">page_nums</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 合并每个页面的题目</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">problems_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">problems_dict</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="获取通过代码">获取通过代码</h2>
+<p>有了提交记录 <code>URL</code>，就可以爬取代码了。</p>
+<p>但是代码并不是直接放在 <code>HTML</code> 里传回来的，而是放在 <code>Javascript</code> 中再由浏览器处理得到的，具体可以查看网页源代码，发现以下两行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">unformattedCode</span> <span class="o">=</span> <span class="s2">&#34;\u003Cspan class=\&#34;pl-cp\&#34;\u003E#include\u003C...&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">formattedCode</span> <span class="o">=</span> <span class="s2">&#34;\u003Cspan class=\&#34;pl-cp\&#34;\u003E#include\u003C...&#34;</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>因为我的代码已经格式化过了，而且 <code>OJ</code> 默认的格式化风格和我不一样，所以我就抓取 <code>unformattedCode</code> 里的就可以了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">get_submission_content</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">get_code_html</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_submission_content</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 截取 unformattedCode 里的内容</span>
+</span></span><span class="line"><span class="cl">    <span class="n">start</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;const unformattedCode = &#34;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="s1">&#39;const unformattedCode = &#34;&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">end</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\&#34;</span><span class="s2">;&#34;</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;const formattedCode = &#34;&#39;</span><span class="p">,</span> <span class="n">start</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 把 \u003C 这样的 Unicode 转义字符转换为正常的字符</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="sa">r</span><span class="s2">&#34;(</span><span class="se">\\</span><span class="s2">u[0-9a-fA-F])&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;unicode-escape&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">content</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面的代码判断会返回一个 <code>HTML</code> 字符串，含有非常多的 <code>&lt;span&gt;</code> 和 <code>&amp;amp;</code> 这样的东西，所以接下来的就是正常的 <code>HTML</code> 的处理了，把标签去掉，在把一些特殊符号转换回来就可以了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">get_code</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">code</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_code_html</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">code</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&#34;&lt;/?[^&gt;]+&gt;&#34;</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span> <span class="c1"># 去掉 HTML 标签</span>
+</span></span><span class="line"><span class="cl">    <span class="n">code</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&#34;&amp;lt;&#34;</span><span class="p">,</span> <span class="s2">&#34;&lt;&#34;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">code</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&#34;&amp;gt;&#34;</span><span class="p">,</span> <span class="s2">&#34;&gt;&#34;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">code</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&#34;&amp;amp;&#34;</span><span class="p">,</span> <span class="s2">&#34;&amp;&#34;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">code</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&#34;&amp;quot;&#34;</span><span class="p">,</span> <span class="s1">&#39;&#34;&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">code</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&#34;&amp;apos;&#34;</span><span class="p">,</span> <span class="s2">&#34;&#39;&#34;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">code</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&#34;&amp;#39;&#34;</span><span class="p">,</span> <span class="s2">&#34;&#39;&#34;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">code</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">scrape_code</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">,</span> <span class="n">problem</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">code</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_code</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 写入代码到文件</span>
+</span></span><span class="line"><span class="cl">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">problem</span> <span class="o">+</span> <span class="s2">&#34;.cpp&#34;</span><span class="p">,</span> <span class="s2">&#34;w&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Failed to scrape </span><span class="si">{</span><span class="n">problem</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="完善主程序">完善主程序</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;passwd.txt&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">username</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">password</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">cookie</span> <span class="o">=</span> <span class="k">await</span> <span class="n">init_cookie</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">(</span><span class="n">cookies</span><span class="o">=</span><span class="n">cookie</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Failed to login.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Succeeded to get cookie.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 指定爬取的题目页面编号</span>
+</span></span><span class="line"><span class="cl">        <span class="n">problems</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_problems</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Succeeded to get the problem list. </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">problems</span><span class="p">)</span><span class="si">}</span><span class="s2"> problems in total.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 需要将这些协程加入 Eventloop 实现异步爬取</span>
+</span></span><span class="line"><span class="cl">        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="o">*</span><span class="p">[</span><span class="n">scrape_code</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">problem</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">problems</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;All tasks have finished.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>完整代码见 <a href="https://github.com/ctj12461/syzoj-crawler"target="_blank" rel="external nofollow noopener noreferrer">GitHub</a>。</p>
+<h2 id="测试">测试</h2>
+<p>使用同学的帐号进行测试，爬取 <code>465</code> 道题目仅需 <code>27</code> 秒：</p>
+<figure><a class="lightgallery" href="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-thumbnail="/blogs/contents/2022/python-web-crawler-syzoj-accpeted-codes/crawler-output.png" data-sub-html="<h2>爬虫输出结果</h2>">
+    
+  </a><figcaption class="image-caption">爬虫输出结果</figcaption>
+  </figure>
+<p>如果使用同步爬虫，则需要 <code>1</code> 分 <code>18</code> 秒，效率提升还是很明显的。</p>
+<h2 id="性能提升">性能提升</h2>
+<p>如果网络延迟较低，字符串相关的处理可能会成为性能瓶颈，可以考虑使用多线程/多进程进行优化。具体也没有我也尝试过，因为大多数情况下网络延迟还是比较严重的，所以在其他方面做优化不一定有用。大家可以自己实现。</p>
+]]></description></item></channel></rss>

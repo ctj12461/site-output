@@ -1,0 +1,197 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Game - 分类 - ctj12461's Blog</title><link>https://ctj12461.github.io/blogs/categories/game/</link><description>Game - 分类 - ctj12461's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ctj12461@163.com (ctj12461)</managingEditor><webMaster>ctj12461@163.com (ctj12461)</webMaster><lastBuildDate>Sat, 06 Aug 2022 21:06:58 +0800</lastBuildDate><atom:link href="https://ctj12461.github.io/blogs/categories/game/" rel="self" type="application/rss+xml"/><item><title>Minecraft 运动学研究</title><link>https://ctj12461.github.io/blogs/contents/2022/motion-study-in-minecraft/</link><pubDate>Sat, 06 Aug 2022 21:06:58 +0800</pubDate><author>作者</author><guid>https://ctj12461.github.io/blogs/contents/2022/motion-study-in-minecraft/</guid><description><![CDATA[<p>在造红石炮时，往往需要用到一些运动学的知识。以下是我对 Minecraft 的运动学的一些研究，应该会对设计红石炮有所帮助，</p>
+<h2 id="前置知识">前置知识</h2>
+<ul>
+<li>在 Minecraft 中，我们通常只考虑实体的运动，而方块则与运动没有一点关系。实体的运动大体与高中物理相同，但需要考虑空气阻力的作用，这使得 Minecraft 中的运动更加真实但又更加复杂。</li>
+<li>在 Minecraft 中，长度单位有格和米 $(\text{m})$ 两种，$1$ 格 $=1\ \text{m}$，所以它们在数值上是相同的，所以一般直接使用米作为长度单位。</li>
+<li>时间单位有三种，分别是游戏刻 $(\text{gt})$、红石刻 $(\text{rt})$ 和秒 $(\text{s})$，它们有这样的换算关系：$1\ \text{gt}=0.5\ \text{rt}=1\ \text{s}$。这三种单位都很常用。</li>
+<li>Minecraft 中不同实体的重力加速度可能是不同的。</li>
+<li>尽管现实中的运动是连续的，但由于计算机和 Minecraft 的实现原因，Minecraft 的运动是离散的，其每 $1\ \text{gt}$ 计算一次，因此，各种复杂的计算可以通过计算每 $1\ \text{gt}$ 的运动情况再累加的方法实现。</li>
+</ul>
+<h2 id="竖直方向上的运动">竖直方向上的运动</h2>
+<h3 id="理论计算">理论计算</h3>
+<p>这里以 TNT 为研究对象。在 <a href="https://minecraft.fandom.com/wiki/Entity#Motion_of_entities"target="_blank" rel="external nofollow noopener noreferrer">Minecraft Wiki</a> 上有各种实体的相关参数，查阅得知 TNT 的重力加速度 $a = 0.04\ \operatorname{m/gt^2}=16\ \operatorname{m/s^2}$，阻力系数 $k=0.02\ \operatorname{gt^{-1}}=0.4\ \operatorname{gt^{-1}}$。原文中提到的是 Drag，中文版中翻译为阻力，但其实它是表示在一定速度时产生的产生空气阻力的加速度，即 $a_f=kv$，所以我觉得阻力系数会更恰当。</p>
+<p>前面提到 Minecraft 中的运动可以拆分为每个 $\operatorname{gt}$ 进行计算，所以计算过程就像是数列的计算。</p>
+<p>这里我们研究 TNT 在竖直方向上初速度为 $0$ 的运动。设 $v(t)$ 表示在 $t\ \operatorname{gt}$ 时的速度，$h(t)$ 为此时下落的高度。则 $v(0) = 0$。</p>
+<p>假设每 $\operatorname{gt}$ 内 TNT 做匀变速直线运动，则运动状态有如下关系：</p>
+<p>$$
+\begin{split}
+&amp;v(t) = v(t - 1) + [a - kv(t - 1)]\\
+&amp;h(t) = h(t - 1) + \frac{v(t - 1) + v(t)}{2}\\
+\end{split}
+$$</p>
+<p>使用 Python 3 实现计算：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">81</span>
+</span></span><span class="line"><span class="cl"><span class="n">h</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">81</span>
+</span></span><span class="line"><span class="cl"><span class="n">k</span> <span class="o">=</span> <span class="mf">0.02</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="mf">0.04</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">81</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span>
+</span></span><span class="line"><span class="cl">    <span class="n">h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">8</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;i = </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, t = </span><span class="si">{</span><span class="n">i</span> <span class="o">/</span> <span class="mi">20</span><span class="si">}</span><span class="s2"> s, h = </span><span class="si">{</span><span class="n">h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> m&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>输出结果如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">i = 8, t = 0.4 s, h = 1.2 m
+</span></span><span class="line"><span class="cl">i = 16, t = 0.8 s, h = 4.7 m
+</span></span><span class="line"><span class="cl">i = 24, t = 1.2 s, h = 10.0 m
+</span></span><span class="line"><span class="cl">i = 32, t = 1.6 s, h = 16.9 m
+</span></span><span class="line"><span class="cl">i = 40, t = 2.0 s, h = 25.1 m
+</span></span><span class="line"><span class="cl">i = 48, t = 2.4 s, h = 34.5 m
+</span></span><span class="line"><span class="cl">i = 56, t = 2.8 s, h = 44.9 m
+</span></span><span class="line"><span class="cl">i = 64, t = 3.2 s, h = 56.2 m
+</span></span><span class="line"><span class="cl">i = 72, t = 3.6 s, h = 68.1 m
+</span></span><span class="line"><span class="cl">i = 80, t = 4.0 s, h = 80.7 m
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="实验验证">实验验证</h3>
+<p>在 Minecraft 中进行验证，可以通过中继器延时控制活塞的伸缩，用活塞挡住 TNT，从而控制 TNT 的实际下落时间。TNT 在 $4\ \text{s}$ 后会爆炸，可以用方块搭建一面墙作为标尺，利用 TNT 爆炸破坏墙面来确定其位置。</p>
+<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-1.png" data-sub-html="<h2>实验装置设计</h2>">
+    
+  </a><figcaption class="image-caption">实验装置设计</figcaption>
+  </figure>
+<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-design-2.png" data-sub-html="<h2>实验装置设计</h2>">
+    
+  </a><figcaption class="image-caption">实验装置设计</figcaption>
+  </figure>
+<p>为了减小实验误差，可采取如下措施：</p>
+<ul>
+<li>选择爆炸抗性较高的方块</li>
+<li>适当增大墙与 TNT 下落轨迹的距离，因为 TNT 伤害按照球体进行计算，拉长距离可以让损害的面积减小，TNT 中心的高度更精确</li>
+<li>计算好延迟，<strong>特别是活塞</strong></li>
+</ul>
+<p>进行三次实验，对每个时刻的下落高度取平均值。</p>
+<figure><a class="lightgallery" href="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-thumbnail="/blogs/contents/2022/motion-study-in-minecraft/experiment-1-result.png" data-sub-html="<h2>实验结果</h2>">
+    
+  </a><figcaption class="image-caption">实验结果</figcaption>
+  </figure>
+<p>进行数据处理，并与理论分析得到的数据进行比较：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><strong>下落时间 $t/\text{s}$</strong></th>
+<th style="text-align:center">$0.8$</th>
+<th style="text-align:center">$1.2$</th>
+<th style="text-align:center">$1.6$</th>
+<th style="text-align:center">$2.0$</th>
+<th style="text-align:center">$2.4$</th>
+<th style="text-align:center">$2.8$</th>
+<th style="text-align:center">$3.2$</th>
+<th style="text-align:center">$3.6$</th>
+<th style="text-align:center">$4.0$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>第一组下落高度 $h_1/\text{m}$</strong></td>
+<td style="text-align:center">$4.5$</td>
+<td style="text-align:center">$10.2$</td>
+<td style="text-align:center">$17.5$</td>
+<td style="text-align:center">$25.6$</td>
+<td style="text-align:center">$35.3$</td>
+<td style="text-align:center">$45.3$</td>
+<td style="text-align:center">$56.4$</td>
+<td style="text-align:center">$68.0$</td>
+<td style="text-align:center">$79.9$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>第二组下落高度 $h_2/\text{m}$</strong></td>
+<td style="text-align:center">$4.6$</td>
+<td style="text-align:center">$10.7$</td>
+<td style="text-align:center">$17.3$</td>
+<td style="text-align:center">$25.8$</td>
+<td style="text-align:center">$34.9$</td>
+<td style="text-align:center">$45.2$</td>
+<td style="text-align:center">$56.4$</td>
+<td style="text-align:center">$69.1$</td>
+<td style="text-align:center">$79.7$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>第三组下落高度 $h_3/\text{m}$</strong></td>
+<td style="text-align:center">$5.0$</td>
+<td style="text-align:center">$10.5$</td>
+<td style="text-align:center">$17.1$</td>
+<td style="text-align:center">$25.7$</td>
+<td style="text-align:center">$35.0$</td>
+<td style="text-align:center">$45.8$</td>
+<td style="text-align:center">$56.9$</td>
+<td style="text-align:center">$68.6$</td>
+<td style="text-align:center">$79.7$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>平均下落高度 $h/\text{m}$</strong></td>
+<td style="text-align:center">$5.0$</td>
+<td style="text-align:center">$10.4$</td>
+<td style="text-align:center">$17.3$</td>
+<td style="text-align:center">$25.7$</td>
+<td style="text-align:center">$35.1$</td>
+<td style="text-align:center">$45.4$</td>
+<td style="text-align:center">$56.6$</td>
+<td style="text-align:center">$68.6$</td>
+<td style="text-align:center">$79.8$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>理论下落高度 $h_0/\text{m}$</strong></td>
+<td style="text-align:center">$4.7$</td>
+<td style="text-align:center">$10.0$</td>
+<td style="text-align:center">$16.9$</td>
+<td style="text-align:center">$25.1$</td>
+<td style="text-align:center">$34.5$</td>
+<td style="text-align:center">$44.9$</td>
+<td style="text-align:center">$56.2$</td>
+<td style="text-align:center">$68.1$</td>
+<td style="text-align:center">$80.7$</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>下落高度差值 $\Delta h/\text{m}$</strong></td>
+<td style="text-align:center">$0.3$</td>
+<td style="text-align:center">$0.4$</td>
+<td style="text-align:center">$0.4$</td>
+<td style="text-align:center">$0.6$</td>
+<td style="text-align:center">$0.6$</td>
+<td style="text-align:center">$0.5$</td>
+<td style="text-align:center">$0.4$</td>
+<td style="text-align:center">$0.5$</td>
+<td style="text-align:center">$0.9$</td>
+</tr>
+</tbody>
+</table>
+<p>由于通过方块的损毁来采集数据，而损毁区域的大小大概可以用一个 $4\times 4$ 的矩形框起来，再加上爆炸有很多不确定因素，所以系统误差较大，而 $\Delta h$ 大多数都小于 $0.9\ \text{m}$，在可接受范围内，所以这种计算方式是可行的。</p>
+<h3 id="应用">应用</h3>
+<p>Minecraft 中的速度是可以合成和分解的，所以竖直方向上的运动不管在什么时候都可以拿出来独立分析。</p>
+<p>我们可以通过该理论计算任何实体在竖直方向上的运动情况，尤其是在红石炮中对 TNT 弹头的飞行时间进行计算和调整，以及发射时相关时序的控制。</p>
+<h2 id="水平方向上的运动">水平方向上的运动</h2>
+<p>其实水平方向上的运动与竖直方向上的大体类似，但是有点实体在水平方向（$x,z$ 轴）的阻力系数与竖直方向的不同，所以需要注意。</p>
+<p>但是考虑到实际应用，一般情况下都是涉及到红石炮这种装置，其在水平方向上能够提供往往非常巨大，阻力远小于动力，且红石炮的弹头在飞行过程中在水平方向上不受重力，可以近似为匀速直线运动，不需要用到这么复杂的理论。</p>
+]]></description></item></channel></rss>
